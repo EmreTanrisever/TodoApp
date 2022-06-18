@@ -18,8 +18,7 @@ Add ToDo             |
 
 Update ToDo             |
 :-------------------------:
-![UpdateToDo](https://user-images.githubusercontent.com/44719978/174437793-10489dcb-a590-45f5-a65f-8c53fae73563.mp4)
-  | 
+![UpdateToDo](https://user-images.githubusercontent.com/44719978/174437793-10489dcb-a590-45f5-a65f-8c53fae73563.mp4)  | 
 
 Delete ToDo             |
 :-------------------------:
