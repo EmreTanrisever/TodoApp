@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class TaskListController: UIViewController {
 
-    let taskTableView = UITableView()
+    private let taskTableView = UITableView()
     private let fabButton = UIButton()
     private let modelView = ToDoViewModel()
     private var toDos = [ToDoModel]()
@@ -22,6 +22,8 @@ class ViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         
         view.backgroundColor = .white
+
+        toDos = modelView.returnData() ?? [ToDoModel]()
         
         configure()
     }
@@ -87,35 +89,29 @@ class ViewController: UIViewController {
         navigationController?.pushViewController(TaskAddController(), animated: true)
     }
     // MARK: FABBUTTON FINISH
+    
+    @objc func taskButtonTapped(sender: UIButton) {
+        modelView.delete(index: sender.tag)
+        toDos = modelView.returnData() ?? [ToDoModel]()
+        taskTableView.reloadData()
+    }
 }
 
 // MARK: - Extension
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension TaskListController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return modelView.countData()!
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell") as! TaskTableViewCell
-        if let array = modelView.returnData() {
-            cell.setTask(task: array[indexPath.row].task)
-            cell.setDate(date: array[indexPath.row].date)
-            let nsString = array[indexPath.row].description as NSString
-            if nsString.length >= 100
-            {
-                var str = nsString.substring(with: NSRange(location: 0, length: nsString.length > 100 ? 100: nsString.length))
-                str += "..."
-                cell.setDescription(description: str)
-            }else {
-                cell.setDescription(description: array[indexPath.row].description)
-            }
-
-            cell.taskButton.tag = indexPath.row
-            toDos = array
-        }
+        cell.setTask(task: toDos[indexPath.row].task)
+        cell.setDate(date: toDos[indexPath.row].date)
+        cell.setDescription(description: toDos[indexPath.row].description)
+        cell.taskButton.addTarget(self, action: #selector(taskButtonTapped(sender:)), for: .touchUpInside)
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let alert = UIAlertController(title: "Update", message: "", preferredStyle: .alert)
         alert.addTextField { UITextField in
@@ -132,9 +128,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let descriptionTextField = alert.textFields![1]
             let dateTextField = alert.textFields![2]
             self.modelView.update(data: ToDoModel(task: taskTextField.text!, description: descriptionTextField.text!, date: dateTextField.text!), index: indexPath.row)
+            self.toDos = self.modelView.returnData() ?? [ToDoModel]()
             tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 }
+

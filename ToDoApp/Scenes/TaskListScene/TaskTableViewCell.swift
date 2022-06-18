@@ -14,7 +14,6 @@ class TaskTableViewCell: UITableViewCell {
     private let descriptionLabel = UILabel()
     private let dateLabel = UILabel()
     private let modelView = ToDoViewModel()
-    private let tableView = ViewController().taskTableView
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,7 +29,6 @@ class TaskTableViewCell: UITableViewCell {
         
         taskButtonDesign()
         setTaskButtonConstraint()
-        taskButton.addTarget(self, action: #selector(taskButtonTapped(sender:)), for: .touchUpInside)
         
         taskLabelDesign()
         setTaskLabelConstraint()
@@ -38,7 +36,6 @@ class TaskTableViewCell: UITableViewCell {
         descriptionLabelDesign()
         setDescriptionLabelConstraints()
         
-        dateLabelDesign()
         setDateLabelDesignConstraints()
     }
     
@@ -100,22 +97,12 @@ class TaskTableViewCell: UITableViewCell {
         }
     }
     
-    private func dateLabelDesign() {
-        dateLabel.text = "27.06.1999"
-    }
     
     private func setDateLabelDesignConstraints() {
         dateLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(8)
             make.trailing.equalToSuperview().offset(-16)
         }
-    }
-    
-    @objc func taskButtonTapped(sender: UIButton) {
-        modelView.delete(index: sender.tag)
-        taskButton.layer.borderColor = UIColor.green.cgColor
-        tableView.deleteRows(at: [IndexPath(row: sender.tag, section: sender.tag)], with: .fade)
-        tableView.reloadData()
     }
     
     required init?(coder: NSCoder) {

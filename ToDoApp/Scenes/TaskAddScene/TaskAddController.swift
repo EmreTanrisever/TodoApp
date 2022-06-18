@@ -129,7 +129,7 @@ class TaskAddController: UIViewController, UITextViewDelegate {
         if !taskTextView.text.isEmpty {
             let task = ToDoModel(task: taskTextView.text, description: descriptionTextView.text, date: dateFormatter.string(from: datePicker.date))
             viewModel.add(data: [task])
-            navigationController?.pushViewController(ViewController(), animated: true)
+            navigationController?.pushViewController(TaskListController(), animated: true)
         }
     }
 }
